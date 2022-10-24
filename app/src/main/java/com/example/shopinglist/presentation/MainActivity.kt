@@ -1,8 +1,10 @@
 package com.example.shopinglist.presentation
 
 import android.os.Bundle
+import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.example.shopinglist.R
 
@@ -36,7 +38,43 @@ class MainActivity : AppCompatActivity() {
                 ShopListAdapter.MAX_POOL_SIZE
             )
         }
+        onShopItemLongClick()
+        onShopClick()
+        setupSwipeListener(rvShopList)
+    }
 
+    private fun setupSwipeListener(rvShopList: RecyclerView?) {
+        val callback = object : ItemTouchHelper.SimpleCallback(
+            0, ItemTouchHelper.RIGHT or
+                    ItemTouchHelper.LEFT
+        ) {
+            override fun onMove(
+                recyclerView: RecyclerView,
+                viewHolder: RecyclerView.ViewHolder,
+                target: RecyclerView.ViewHolder
+            ): Boolean {
+                return false
+            }
+
+            override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+                val item = adapterShopList.shopList[viewHolder.adapterPosition]
+                viewModel.deleteShopItem(item)
+            }
+
+        }
+        ItemTouchHelper(callback).attachToRecyclerView(rvShopList)
+    }
+
+    private fun onShopClick() {
+        adapterShopList.onShopItemClickListener = {
+            Log.d("MainActivity", "Element clicked")
+        }
+    }
+
+    private fun onShopItemLongClick() {
+        adapterShopList.onShopItemLongClickListener = {
+            viewModel.changeEnableState(it)
+        }
     }
 
 }
