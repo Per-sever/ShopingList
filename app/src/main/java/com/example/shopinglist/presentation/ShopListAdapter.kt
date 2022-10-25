@@ -1,27 +1,14 @@
 package com.example.shopinglist.presentation
 
-import android.util.Log
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
-import androidx.recyclerview.widget.DiffUtil
-import androidx.recyclerview.widget.RecyclerView
-import androidx.recyclerview.widget.RecyclerView.Adapter
+import androidx.recyclerview.widget.ListAdapter
 import com.example.shopinglist.R
 import com.example.shopinglist.domain.ShopItem
 
-class ShopListAdapter : Adapter<ShopListAdapter.ShopItemViewHolder>() {
+class ShopListAdapter : ListAdapter<ShopItem, ShopItemViewHolder>
+    (ShopItemDiffCallback()) {
 
-    var count = 0
-
-    var shopList = listOf<ShopItem>()
-        set(value) {
-            val callback = ShopListDiffCallback(value, shopList)
-            val diffResult = DiffUtil.calculateDiff(callback)
-            diffResult.dispatchUpdatesTo(this)
-            field = value
-        }
 
     companion object {
         const val VIEW_TYPE_ENABLED = 100
@@ -47,8 +34,7 @@ class ShopListAdapter : Adapter<ShopListAdapter.ShopItemViewHolder>() {
     }
 
     override fun onBindViewHolder(holder: ShopItemViewHolder, position: Int) {
-        Log.d("onBindViewHolder", "${++count}")
-        val shopItem = shopList[position]
+        val shopItem = getItem(position)
 
         holder.tvName.text = shopItem.name
         holder.tvCount.text = shopItem.count.toString()
@@ -62,12 +48,8 @@ class ShopListAdapter : Adapter<ShopListAdapter.ShopItemViewHolder>() {
     }
 
 
-    override fun getItemCount(): Int {
-        return shopList.size
-    }
-
     override fun getItemViewType(position: Int): Int {
-        val shopItem = shopList[position]
+        val shopItem = getItem(position)
         return if (shopItem.enabled) {
             VIEW_TYPE_ENABLED
         } else {
@@ -75,9 +57,5 @@ class ShopListAdapter : Adapter<ShopListAdapter.ShopItemViewHolder>() {
         }
     }
 
-    class ShopItemViewHolder(val view: View) : RecyclerView.ViewHolder(view) {
-        val tvName = view.findViewById<TextView>(R.id.tvName)
-        val tvCount = view.findViewById<TextView>(R.id.tvCount)
-    }
 
 }
