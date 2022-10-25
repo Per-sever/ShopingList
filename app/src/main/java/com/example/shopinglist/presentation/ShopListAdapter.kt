@@ -1,9 +1,11 @@
 package com.example.shopinglist.presentation
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.Adapter
 import com.example.shopinglist.R
@@ -11,10 +13,14 @@ import com.example.shopinglist.domain.ShopItem
 
 class ShopListAdapter : Adapter<ShopListAdapter.ShopItemViewHolder>() {
 
+    var count = 0
+
     var shopList = listOf<ShopItem>()
         set(value) {
+            val callback = ShopListDiffCallback(value, shopList)
+            val diffResult = DiffUtil.calculateDiff(callback)
+            diffResult.dispatchUpdatesTo(this)
             field = value
-            notifyDataSetChanged()
         }
 
     companion object {
@@ -41,6 +47,7 @@ class ShopListAdapter : Adapter<ShopListAdapter.ShopItemViewHolder>() {
     }
 
     override fun onBindViewHolder(holder: ShopItemViewHolder, position: Int) {
+        Log.d("onBindViewHolder", "${++count}")
         val shopItem = shopList[position]
 
         holder.tvName.text = shopItem.name
