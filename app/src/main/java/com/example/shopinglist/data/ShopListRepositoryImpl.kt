@@ -15,7 +15,7 @@ object ShopListRepositoryImpl : ShopListRepository {
     private val shoppingListLiveData = MutableLiveData<List<ShopItem>>()
 
     init {
-        for (i in 0 until 1000) {
+        for (i in 0 until 12) {
             val item = ShopItem("Name $i", i, Random.nextBoolean())
             addShopItem(item)
         }
