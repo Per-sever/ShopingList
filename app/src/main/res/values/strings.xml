@@ -4,4 +4,6 @@
     <string name="save_button">Save</string>
     <string name="count_ed">Count:</string>
     <string name="name_ed">Name:</string>
+    <string name="error_title_msg">Incorrect title</string>
+    <string name="error_count_msg">Incorrect quantity</string>
 </resources>

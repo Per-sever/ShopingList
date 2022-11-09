@@ -33,7 +33,7 @@ class ShopItemViewModel : ViewModel() {
         get() = _shouldCloseScreen
 
 
-    fun addShopItemUseCase(inputName: String, inputCount: String) {
+    fun addShopItemUseCase(inputName: String?, inputCount: String?) {
         val name = parseName(inputName)
         val count = parseCount(inputCount)
         val fieldsValid = validateInput(name, count)
@@ -45,7 +45,7 @@ class ShopItemViewModel : ViewModel() {
     }
 
 
-    fun editShopItemUseCase(inputName: String, inputCount: String) {
+    fun editShopItemUseCase(inputName: String?, inputCount: String?) {
         val name = parseName(inputName)
         val count = parseCount(inputCount)
         val fieldsValid = validateInput(name, count)
