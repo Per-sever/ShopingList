@@ -3,19 +3,13 @@ package com.example.shopinglist.presentation
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.text.Editable
-import android.text.TextWatcher
-import android.widget.Button
-import android.widget.EditText
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.ViewModelProvider
 import com.example.shopinglist.R
 import com.example.shopinglist.domain.ShopItem
-import com.google.android.material.textfield.TextInputLayout
 
 class ShopItemActivity : AppCompatActivity() {
 
-//    private lateinit var viewModel: ShopItemViewModel
+    //    private lateinit var viewModel: ShopItemViewModel
 //
 //    private lateinit var etName: EditText
 //    private lateinit var etCount: EditText
@@ -23,21 +17,21 @@ class ShopItemActivity : AppCompatActivity() {
 //    private lateinit var titleCount: TextInputLayout
 //    private lateinit var saveButton: Button
 //
-//    private var screenMode = MODE_UNKNOWN
-//    private var shopItemId = ShopItem.UNDEFINED_ID
+    private var screenMode = MODE_UNKNOWN
+    private var shopItemId = ShopItem.UNDEFINED_ID
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_shop_item)
 //        viewModel = ViewModelProvider(this)[ShopItemViewModel::class.java]
 //        initViews()
-//        parseIntent()
+        parseIntent()
 //        observeViewModel()
 //        addTextChangeListeners()
-//        launchMode()
+        launchMode()
     }
 
-//    private fun observeViewModel() {
+    //    private fun observeViewModel() {
 //        viewModel.errorInputCount.observe(this) {
 //            val message = if (it) {
 //                getString(R.string.error_title_msg)
@@ -59,13 +53,18 @@ class ShopItemActivity : AppCompatActivity() {
 //        }
 //    }
 //
-//    private fun launchMode() {
-//        when (screenMode) {
-//            MODE_ADD -> launchAddMode()
-//            MODE_EDIT -> launchEditMode()
-//        }
-//    }
-//
+    private fun launchMode() {
+        val fragment = when (screenMode) {
+            MODE_ADD -> ShopItemFragment.newInstanceAddItem()
+            MODE_EDIT -> ShopItemFragment.newInstanceEditItem(shopItemId)
+            else -> throw RuntimeException("Unknown screen mode $screenMode")
+        }
+        supportFragmentManager.beginTransaction()
+            .add(R.id.shop_item_container, fragment)
+            .commit()
+    }
+
+    //
 //    private fun launchAddMode() {
 //        saveButton.setOnClickListener {
 //            viewModel.addShopItemUseCase(etName.text?.toString(), etCount.text?.toString())
@@ -84,25 +83,26 @@ class ShopItemActivity : AppCompatActivity() {
 //        }
 //    }
 //
-//    private fun parseIntent() {
-//        if (!intent.hasExtra(EXTRA_SCREEN_MODE)) {
-//            throw RuntimeException("Param screen is absent")
-//        }
-//
-//        val mode = intent.getStringExtra(EXTRA_SCREEN_MODE)
-//        if (mode != MODE_EDIT && mode != MODE_ADD) {
-//            throw RuntimeException("Unknown screen mode - $mode")
-//        }
-//        screenMode = mode
-//
-//        if (screenMode == MODE_EDIT) {
-//            if (!intent.hasExtra(EXTRA_SHOP_ITEM_ID)) {
-//                throw RuntimeException("Param shop item id is absent")
-//            }
-//            shopItemId = intent.getIntExtra(EXTRA_SHOP_ITEM_ID, ShopItem.UNDEFINED_ID)
-//        }
-//    }
-//
+    private fun parseIntent() {
+        if (!intent.hasExtra(EXTRA_SCREEN_MODE)) {
+            throw RuntimeException("Param screen is absent")
+        }
+
+        val mode = intent.getStringExtra(EXTRA_SCREEN_MODE)
+        if (mode != MODE_EDIT && mode != MODE_ADD) {
+            throw RuntimeException("Unknown screen mode - $mode")
+        }
+        screenMode = mode
+
+        if (screenMode == MODE_EDIT) {
+            if (!intent.hasExtra(EXTRA_SHOP_ITEM_ID)) {
+                throw RuntimeException("Param shop item id is absent")
+            }
+            shopItemId = intent.getIntExtra(EXTRA_SHOP_ITEM_ID, ShopItem.UNDEFINED_ID)
+        }
+    }
+
+    //
 //    private fun addTextChangeListeners() {
 //        etName.addTextChangedListener(object : TextWatcher {
 //            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
