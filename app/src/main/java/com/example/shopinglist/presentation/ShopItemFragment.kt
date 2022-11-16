@@ -28,9 +28,7 @@ class ShopItemFragment : Fragment() {
     private var shopItemId = ShopItem.UNDEFINED_ID
 
     override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
+        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View? {
         return inflater.inflate(R.layout.fragment_shop_item, container, false)
     }
