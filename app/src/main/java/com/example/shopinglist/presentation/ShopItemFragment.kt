@@ -1,5 +1,6 @@
 package com.example.shopinglist.presentation
 
+import android.content.Context
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -17,6 +18,7 @@ import com.google.android.material.textfield.TextInputLayout
 class ShopItemFragment : Fragment() {
 
     private lateinit var viewModel: ShopItemViewModel
+    private lateinit var onEditingFinishedListener: OnEditingFinishedListener
 
     private lateinit var etName: EditText
     private lateinit var etCount: EditText
@@ -24,8 +26,16 @@ class ShopItemFragment : Fragment() {
     private lateinit var titleCount: TextInputLayout
     private lateinit var saveButton: Button
 
+
     private var screenMode = MODE_UNKNOWN
     private var shopItemId = ShopItem.UNDEFINED_ID
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        if (context is OnEditingFinishedListener) {
+            onEditingFinishedListener = context
+        }
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
@@ -66,8 +76,7 @@ class ShopItemFragment : Fragment() {
             titleName.error = message
         }
         viewModel.shouldCloseScreen.observe(viewLifecycleOwner) {
-            activity?.onBackPressed()
-            requireActivity().onBackPressed()
+            onEditingFinishedListener.onEditingFinished()
         }
     }
 
@@ -149,6 +158,10 @@ class ShopItemFragment : Fragment() {
         titleName = view.findViewById(R.id.title_name)
         titleCount = view.findViewById(R.id.title_count)
         saveButton = view.findViewById(R.id.button_save)
+    }
+
+    interface OnEditingFinishedListener {
+        fun onEditingFinished()
     }
 
     companion object {
