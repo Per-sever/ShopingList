@@ -4,11 +4,11 @@ import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentContainerView
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.example.shopinglist.R
+import com.example.shopinglist.databinding.ActivityMainBinding
 import com.example.shopinglist.presentation.ShopItemActivity.Companion.newIntentAddItem
 import com.example.shopinglist.presentation.ShopItemActivity.Companion.newIntentEditItem
 import com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -18,20 +18,18 @@ class MainActivity : AppCompatActivity(), ShopItemFragment.OnEditingFinishedList
     private lateinit var viewModel: MainViewModel
     private lateinit var adapterShopList: ShopListAdapter
 
-    private var shopItemContainer: FragmentContainerView? = null
-
+    private lateinit var binding: ActivityMainBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        binding = ActivityMainBinding.inflate(layoutInflater)
+        setContentView(binding.root)
         setupRecyclerView()
         viewModel = ViewModelProvider(this)[MainViewModel::class.java]
-        shopItemContainer = findViewById(R.id.shop_item_container)
-
         viewModel.shopList.observe(this) {
             adapterShopList.submitList(it)
         }
-        val buttonAddItem = findViewById<FloatingActionButton>(R.id.add_shop_item_button)
+        val buttonAddItem = binding.addShopItemButton
         buttonAddItem.setOnClickListener {
             if (isOnePaneMode()) {
                 val intent = newIntentAddItem(this)
@@ -44,7 +42,7 @@ class MainActivity : AppCompatActivity(), ShopItemFragment.OnEditingFinishedList
     }
 
     private fun setupRecyclerView() {
-        val rvShopList = findViewById<RecyclerView>(R.id.rv_shop_list)
+        val rvShopList = binding.rvShopList
         adapterShopList = ShopListAdapter()
         with(rvShopList) {
             adapter = adapterShopList
@@ -85,7 +83,7 @@ class MainActivity : AppCompatActivity(), ShopItemFragment.OnEditingFinishedList
     }
 
     private fun isOnePaneMode(): Boolean {
-        return shopItemContainer == null
+        return binding.shopItemContainer == null
     }
 
     private fun launchSecondPane(fragment: Fragment) {
