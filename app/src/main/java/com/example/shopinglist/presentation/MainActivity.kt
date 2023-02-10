@@ -11,9 +11,15 @@ import com.example.shopinglist.R
 import com.example.shopinglist.databinding.ActivityMainBinding
 import com.example.shopinglist.presentation.ShopItemActivity.Companion.newIntentAddItem
 import com.example.shopinglist.presentation.ShopItemActivity.Companion.newIntentEditItem
-import com.google.android.material.floatingactionbutton.FloatingActionButton
+import javax.inject.Inject
 
 class MainActivity : AppCompatActivity(), ShopItemFragment.OnEditingFinishedListener {
+
+    private val component by lazy {
+        (application as ShopListApplication).component
+    }
+    @Inject
+    lateinit var viewModelFactory: ViewModelFactory
 
     private lateinit var viewModel: MainViewModel
     private lateinit var adapterShopList: ShopListAdapter
@@ -21,11 +27,12 @@ class MainActivity : AppCompatActivity(), ShopItemFragment.OnEditingFinishedList
     private lateinit var binding: ActivityMainBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        component.inject(this)
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
         setupRecyclerView()
-        viewModel = ViewModelProvider(this)[MainViewModel::class.java]
+        viewModel = ViewModelProvider(this, viewModelFactory)[MainViewModel::class.java]
         viewModel.shopList.observe(this) {
             adapterShopList.submitList(it)
         }
